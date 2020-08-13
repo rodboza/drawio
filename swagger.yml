@@ -10,7 +10,7 @@ schemes:
 - "https"
 
 paths:
-  /curva:
+  /curva/findbyname:
     get:
       tags:
       - "curva"
