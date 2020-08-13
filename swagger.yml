@@ -148,7 +148,7 @@ paths:
         "400":
           description: "Processamento invalido"          
 
-  /curva/{curvaID}/processamento{processamentoID}:
+  /curva/{curvaID}/processamento/{processamentoID}:
     get:
       tags:
       - "curva"
@@ -214,7 +214,7 @@ paths:
         "404":
           description: "Curva não encontrada"    
 
-  /curva/{curvaID}/processamento{processamentoID}/pontos:
+  /curva/{curvaID}/processamento/{processamentoID}/pontos:
     get:
       tags:
       - "curva"
