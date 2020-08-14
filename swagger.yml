@@ -6,6 +6,10 @@ info:
 tags:
 - name: "curva"
   description: "funcionalidades das curvas do Transfer Price"
+- name: "processamento"
+  description: "funcionalidades dos processamentos do Transfer Price"
+- name: "pontos"
+  description: "funcionalidades dos pontos do Transfer Price"
 schemes:
 - "https"
 
@@ -63,7 +67,7 @@ paths:
   /curva/{curvaID}/processamento:
     get:
       tags:
-      - "curva"
+      - "processamento"
       summary: "Busca Processamentos de uma curva"
       description: "Retorna uma lista de Processamentos de uma unica curva"
       produces:
@@ -98,7 +102,7 @@ paths:
           description: "Curva não encontrada"
     post:
       tags:
-      - "curva"
+      - "processamento"
       summary: "Criar um novo Processamento"
       description: "Gera um novo processamento para a curva"
       operationId: "EnviaProcessamento"
@@ -121,7 +125,7 @@ paths:
   /curva/{curvaID}/processamento/pontos:
     post:
       tags:
-      - "curva"
+      - "pontos"
       summary: "Criar uma novo Processamento a partir de pontos"
       description: "Gera um Processamento com os pontos passados no post"
       operationId: "EnviaProcessamentoPontos"
@@ -151,7 +155,7 @@ paths:
   /curva/{curvaID}/processamento/{processamentoID}:
     get:
       tags:
-      - "curva"
+      - "processamento"
       summary: "Busca um Processamento de uma curva"
       description: "Retorna os dados de um unico Processamento de uma unica curva"
       produces:
@@ -180,7 +184,7 @@ paths:
           description: "Curva não encontrada"
     put:
       tags:
-      - "curva"
+      - "processamento"
       summary: "Atualiza o Status de Processamento de uma curva"
       description: "Atualiza o Status de um unico Processamento de uma unica curva"
       produces:
@@ -217,7 +221,7 @@ paths:
   /curva/{curvaID}/processamento/{processamentoID}/pontos:
     get:
       tags:
-      - "curva"
+      - "pontos"
       summary: "Busca os pontos de um Processamento de uma curva"
       description: "Retorna uma lista de pontos de unico Processamento de uma unica curva"
       produces:
@@ -244,6 +248,46 @@ paths:
           description: "Código de curva invalido"
         "404":
           description: "Curva não encontrada"
+          
+  /curva/{curvaID}/processamento/{processamentoID}/pontos/findbyvencimento:
+    get:
+      tags:
+      - "pontos"
+      summary: "Busca os pontos de um Processamento de uma curva por vencimento"
+      description: "Retorna uma lista de pontos de unico Processamento de uma unica curva baseado numa lista de vencimentos"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "curvaID"
+        in: "path"
+        description: "ID da curva para consulta"
+        required: true
+        type: "integer"
+        format: "int64" 
+      - name: "processamentoID"
+        in: "path"
+        description: "ID do processamento para consulta"
+        required: true
+        type: "string"
+        format: "date-time" 
+        
+      - in: "body"
+        name: "body"
+        description: "lista de vencimentos a serem pesquisados"
+        required: true
+        schema:
+          $ref: "#/definitions/ListaVencimento"
+      responses:
+        "200":
+          description: "Operação realizada com sucesso"
+          schema:
+            $ref: "#/definitions/ProcessamentoPontos"
+        "400":
+          description: "Código de curva invalido"
+        "404":
+          description: "Curva não encontrada"
+          
+          
           
           
 definitions:
@@ -318,9 +362,16 @@ definitions:
     type: "array"
     items:
        $ref: "#/definitions/Processamento"
-
-
-
+       
+  
+  
+  ListaVencimento:
+    type: "array"
+    items:
+      type: "string"
+      format: "date"
+        
+        
 
 
 
