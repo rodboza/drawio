@@ -6,14 +6,39 @@ info:
 tags:
 - name: "curva"
   description: "funcionalidades das curvas do Transfer Price"
-- name: "processamento"
-  description: "funcionalidades dos processamentos do Transfer Price"
+- name: "execução"
+  description: "funcionalidades das Execuções das curvas do Transfer Price"
 - name: "pontos"
-  description: "funcionalidades dos pontos do Transfer Price"
+  description: "funcionalidades dos pontos de uma execução das curvas do Transfer Price"
 schemes:
 - "https"
 
 paths:
+  /curva:
+    get:
+      tags:
+      - "curva"
+      summary: "Busca uma curva"
+      description: "Retorna os dados cadatrais de uma unica curva"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "curvaID"
+        in: "query"
+        description: "ID da curva para consulta"
+        required: true
+        type: "integer"
+        format: "int64"      
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Curva"
+        "400":
+          description: "Código de curva invalido"
+        "404":
+          description: "Curva não encontrada"
+          
   /curva/findbyname:
     get:
       tags:
@@ -39,137 +64,25 @@ paths:
         "404":
           description: "Curva não encontrada"
   
-  /curva/{curvaID}:
-    get:
-      tags:
-      - "curva"
-      summary: "Busca uma curva"
-      description: "Retorna os dados cadatrais de uma unica curva"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "curvaID"
-        in: "path"
-        description: "ID da curva para consulta"
-        required: true
-        type: "integer"
-        format: "int64"      
-      responses:
-        "200":
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Curva"
-        "400":
-          description: "Código de curva invalido"
-        "404":
-          description: "Curva não encontrada"
-          
-  /curva/{curvaID}/processamento:
-    get:
-      tags:
-      - "processamento"
-      summary: "Busca Processamentos de uma curva"
-      description: "Retorna uma lista de Processamentos de uma unica curva"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "curvaID"
-        in: "path"
-        description: "ID da curva para consulta"
-        required: true
-        type: "integer"
-        format: "int64" 
-      - name: "DataIncio"
-        in: "query"
-        description: "Data do processamento para consulta"
-        required: true
-        type: "string"
-        format: "date" 
-      - name: "DataFim"
-        in: "query"
-        description: "Data do processamento para consulta"
-        required: true
-        type: "string"
-        format: "date" 
-      responses:
-        "200":
-          description: "Operação realizada com sucesso"
-          schema:
-            $ref: "#/definitions/ListaProcessamento"
-        "400":
-          description: "Código de curva invalido"
-        "404":
-          description: "Curva não encontrada"
-    post:
-      tags:
-      - "processamento"
-      summary: "Criar um novo Processamento"
-      description: "Gera um novo processamento para a curva"
-      operationId: "EnviaProcessamento"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "curvaID"
-        in: "path"
-        description: "ID da curva para consulta"
-        required: true
-        type: "integer"
-        format: "int64" 
-      responses:
-        "200":
-          description: "Operação realizada com sucesso"
-          schema:
-            $ref: "#/definitions/Processamento"
-        "400":
-          description: "Processamento invalido"              
-  /curva/{curvaID}/processamento/pontos:
-    post:
-      tags:
-      - "pontos"
-      summary: "Criar uma novo Processamento a partir de pontos"
-      description: "Gera um Processamento com os pontos passados no post"
-      operationId: "EnviaProcessamentoPontos"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "curvaID"
-        in: "path"
-        description: "ID da curva para consulta"
-        required: true
-        type: "integer"
-        format: "int64" 
-      - in: "body"
-        name: "body"
-        description: "enviar pontos para uma nova curva"
-        required: true
-        schema:
-          $ref: "#/definitions/ProcessamentoPontos"
-      responses:
-        "200":
-          description: "Operação realizada com sucesso"
-          schema:
-            $ref: "#/definitions/Processamento"
-        "400":
-          description: "Processamento invalido"          
+  /execucao:
 
-  /curva/{curvaID}/processamento/{processamentoID}:
     get:
       tags:
-      - "processamento"
-      summary: "Busca um Processamento de uma curva"
-      description: "Retorna os dados de um unico Processamento de uma unica curva"
+      - "execução"
+      summary: "Busca uma Execução de uma curva"
+      description: "Retorna os dados de uma unica Execução de uma unica curva"
       produces:
       - "application/json"
       parameters:
       - name: "curvaID"
-        in: "path"
+        in: "query"
         description: "ID da curva para consulta"
         required: true
         type: "integer"
         format: "int64" 
-      - name: "processamentoID"
-        in: "path"
-        description: "ID do processamento para consulta"
+      - name: "execucaoID"
+        in: "query"
+        description: "ID da execução para consulta"
         required: true
         type: "string"
         format: "date-time" 
@@ -177,65 +90,98 @@ paths:
         "200":
           description: "Operação realizada com sucesso"
           schema:
-            $ref: "#/definitions/Processamento"
+            $ref: "#/definitions/Execucao"
         "400":
           description: "Código de curva invalido"
         "404":
           description: "Curva não encontrada"
+
+    post:
+      tags:
+      - "execução"
+      summary: "Criar uma nova Execução"
+      description: "Gera uma nova Execução para a curva"
+      operationId: "EnviaExecucao"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "ID da curva para consulta"
+        required: true
+        schema:
+            $ref: "#/definitions/ExecucaoCurva"
+      responses:
+        "200":
+          description: "Operação realizada com sucesso"
+          schema:
+            $ref: "#/definitions/Execucao"
+        "400":
+          description: "Execução invalida" 
+
+
     put:
       tags:
-      - "processamento"
-      summary: "Atualiza o Status de Processamento de uma curva"
-      description: "Atualiza o Status de um unico Processamento de uma unica curva"
+      - "execução"
+      summary: "Atualiza o Status da Execução de uma curva"
+      description: "Atualiza o Status de uma unica Execução de uma unica curva"
       produces:
       - "application/json"
       parameters:
       - name: "curvaID"
-        in: "path"
+        in: "query"
         description: "ID da curva para consulta"
         required: true
         type: "integer"
         format: "int64" 
-      - name: "processamentoID"
-        in: "path"
-        description: "ID do processamento para consulta"
+      - name: "execucaoID"
+        in: "query"
+        description: "ID da execução para consulta"
         required: true
         type: "string"
         format: "date-time"
       - in: "body"
         name: "body"
-        description: "atualização do status de um processamento"
+        description: "atualização do status de uma execução"
         required: true
         schema:
-          $ref: "#/definitions/ProcessamentoStatus"
+          $ref: "#/definitions/Execucao"
       responses:
         "200":
           description: "Operação realizada com sucesso"
           schema:
-            $ref: "#/definitions/Processamento"
+            $ref: "#/definitions/Execucao"
         "400":
           description: "Código de curva invalido"
         "404":
           description: "Curva não encontrada"    
 
-  /curva/{curvaID}/processamento/{processamentoID}/pontos:
+
+
+  /excucao/findbydatahora:
     get:
       tags:
-      - "pontos"
-      summary: "Busca os pontos de um Processamento de uma curva"
-      description: "Retorna uma lista de pontos de unico Processamento de uma unica curva"
+      - "execução"
+      summary: "Busca Execuções de uma curva"
+      description: "Retorna uma lista de Execuções de uma unica curva"
       produces:
       - "application/json"
       parameters:
       - name: "curvaID"
-        in: "path"
+        in: "query"
         description: "ID da curva para consulta"
         required: true
         type: "integer"
         format: "int64" 
-      - name: "processamentoID"
-        in: "path"
-        description: "ID do processamento para consulta"
+      - name: "dataHoraIncio"
+        in: "query"
+        description: "Data da execução para consulta"
+        required: true
+        type: "string"
+        format: "date-time" 
+      - name: "dataHoraFim"
+        in: "query"
+        description: "Data da execução para consulta"
         required: true
         type: "string"
         format: "date-time" 
@@ -243,58 +189,99 @@ paths:
         "200":
           description: "Operação realizada com sucesso"
           schema:
-            $ref: "#/definitions/ProcessamentoPontos"
+            $ref: "#/definitions/ListaExecucao"
         "400":
           description: "Código de curva invalido"
         "404":
           description: "Curva não encontrada"
           
-  /curva/{curvaID}/processamento/{processamentoID}/pontos/findbyvencimento:
+          
+  /pontos:
     get:
       tags:
       - "pontos"
-      summary: "Busca os pontos de um Processamento de uma curva por vencimento"
-      description: "Retorna uma lista de pontos de unico Processamento de uma unica curva baseado numa lista de vencimentos"
+      summary: "Busca os pontos de uma Execução de uma curva"
+      description: "Retorna uma lista de pontos de uma unica execução  de uma unica curva"
       produces:
       - "application/json"
       parameters:
       - name: "curvaID"
-        in: "path"
+        in: "query"
         description: "ID da curva para consulta"
         required: true
         type: "integer"
         format: "int64" 
-      - name: "processamentoID"
-        in: "path"
-        description: "ID do processamento para consulta"
+      - name: "execucaoID"
+        in: "query"
+        description: "ID da execução para consulta"
         required: true
         type: "string"
         format: "date-time" 
-        
+      responses:
+        "200":
+          description: "Operação realizada com sucesso"
+          schema:
+            $ref: "#/definitions/ExecucaoPontos"
+        "400":
+          description: "Código de curva invalido"
+        "404":
+          description: "Curva não encontrada"  
+    post:
+      tags:
+      - "pontos"
+      summary: "Criar uma nova execução a partir de pontos"
+      description: "Gera uma Execução com os pontos passados no post"
+      operationId: "EnviaExecucaoPontos"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "enviar pontos para uma nova curva"
+        required: true
+        schema:
+          $ref: "#/definitions/newExecucaoPontos"
+      responses:
+        "200":
+          description: "Operação realizada com sucesso"
+          schema:
+            $ref: "#/definitions/Execucao"
+        "400":
+          description: "Execução invalido"          
+  /pontos/findbyvencimento:
+
+    get:
+      tags:
+      - "pontos"
+      summary: "Busca os pontos de uma execução de uma curva por vencimento"
+      description: "Retorna uma lista de pontos de uma unica execução de uma unica curva baseado numa lista de vencimentos"
+      produces:
+      - "application/json"
+      parameters:
       - in: "body"
         name: "body"
         description: "lista de vencimentos a serem pesquisados"
         required: true
         schema:
-          $ref: "#/definitions/ListaVencimento"
+          $ref: "#/definitions/FindByVencimento"
       responses:
         "200":
           description: "Operação realizada com sucesso"
           schema:
-            $ref: "#/definitions/ProcessamentoPontos"
+            $ref: "#/definitions/ExecucaoPontos"
         "400":
           description: "Código de curva invalido"
         "404":
           description: "Curva não encontrada"
-          
-          
-          
-          
+
+
+
+
 definitions:
   Curva:
     type: "object"
     properties:
-      id:
+      curvaId:
         type: "integer"
         format: "int64"
       nome:
@@ -303,10 +290,10 @@ definitions:
         type: "integer"
         format: "int64"
         
-  Processamento:
+  Execucao:
     type: "object"
     properties:
-      id:
+      execucaoId:
         type: "string"
         format: "date-time"
       curvaId:
@@ -319,6 +306,7 @@ definitions:
         - "Em execução"
         - "Aguardando Validação"       
         - "Liberada"     
+        
   Ponto:
     type: "object"
     properties:
@@ -330,9 +318,29 @@ definitions:
         format: "double"
         
 
-  ProcessamentoPontos:
+  ExecucaoPontos:
     type: "object"
     properties:
+      curvaId:
+        type: "integer"
+        format: "int64"
+      execucaoId:
+        type: "string"
+        format: "date-time"
+      data-base:
+        type: "string"
+        format: "date"
+      pontos:
+        type: "array"
+        items:
+          $ref: "#/definitions/Ponto"
+
+  newExecucaoPontos:
+    type: "object"
+    properties:
+      curvaId:
+        type: "integer"
+        format: "int64"
       data-base:
         type: "string"
         format: "date"
@@ -342,36 +350,39 @@ definitions:
           $ref: "#/definitions/Ponto"
           
           
-  ProcessamentoStatus:
+  ExecucaoCurva:
     type: "object"
     properties:
-      status:
+      curvaId:
+        type: "integer"
+        format: "int64"
+        
+  FindByVencimento:      
+    type: "object"
+    properties:
+      curvaId:
+        type: "integer"
+        format: "int64"
+      execucaoId:
         type: "string"
-        enum:
-        - "Aguardando Execução"
-        - "Em execução"
-        - "Aguardando Validação"       
-        - "Liberada"     
+        format: "date-time"
+      vencimentos:
+        type: "array"
+        items:
+          type: "string"
+          format: "date"
+ 
           
   ListaCurva:
     type: "array"
     items:
        $ref: "#/definitions/Curva"
        
-  ListaProcessamento:
+  ListaExecucao:
     type: "array"
     items:
-       $ref: "#/definitions/Processamento"
+       $ref: "#/definitions/Execucao"
        
-  
-  
-  ListaVencimento:
-    type: "array"
-    items:
-      type: "string"
-      format: "date"
-        
-        
 
 
 
