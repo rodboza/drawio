@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  description: "APIs de Curvas do Transfer Price"
+  description: "APIs de Curvas do Transfer Price <img src='https://github.com/rodboza/drawio/blob/master/TRANSFER%20-%20Modelagem.png?raw=true'>"
   version: "1.0.0"
   title: "Swagger im-transfer-price-curva"
 tags:
