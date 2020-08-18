@@ -128,18 +128,6 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "curvaID"
-        in: "query"
-        description: "ID da curva para consulta"
-        required: true
-        type: "integer"
-        format: "int64" 
-      - name: "execucaoID"
-        in: "query"
-        description: "ID da execução para consulta"
-        required: true
-        type: "string"
-        format: "date-time"
       - in: "body"
         name: "body"
         description: "atualização do status de uma execução"
@@ -273,7 +261,7 @@ paths:
           description: "Código de curva invalido"
         "404":
           description: "Curva não encontrada"
-
+      deprecated: true
 
 
 
